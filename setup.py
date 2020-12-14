@@ -14,11 +14,11 @@ with open(os.path.join(HERE, "README.md")) as fid:
 # This call to setup() does all the work
 setup(
     name="rpapy",
-    version="1.0.1",
+    version="1.0.2",
     description="RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/codigo100cera",
+    url="https://github.com/codigo100cera/rpapy",
     author="Codigo Sem Cera",
     author_email="codigo100cera@gmail.com",
     license="MIT",

@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- realpython-reader v1.0.1
+- realpython-reader v1.0.2
 """
 import sys
 from pathlib import Path
