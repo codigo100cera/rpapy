@@ -28,12 +28,12 @@ However, it is advisable to use a virtual environment for an isolated installati
 pip install virtualenv
 mkdir <your-project-name>
 cd <your-project-name>
-virtualenv create rpapy-env
-activate rpapy-ev
+virtualenv  <your-venv-name>
+activate <your-venv-name>
 pip install rpapy
 ```
 
-The construction of the project structure is accomplished by executing the following command in the terminal:
+After installed, the construction of the project structure is accomplished by executing the following command in the terminal:
 ```
 rpapy
 ```
@@ -55,7 +55,11 @@ The hotkeys menu to be used will be displayed after executing the above command.
 
 To run the sample implementation, perform the following steps:
 
-- Configure the .env file in the root directory of the project.
+- Activate the hotkey ```<CTRL>+<CMD>+E```.
+
+- In the messagebox enter ```your-file-name.robot``` or keep the default name ```main.robot```.
+
+- Configure the ```.env``` file in the root directory of the project.
 
 ```
 ###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
