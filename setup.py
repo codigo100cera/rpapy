@@ -30,7 +30,7 @@ setup(
     packages=find_packages(exclude=["resources", "log", "tasks", "tests"]),
     include_package_data=True,
     install_requires=[
-        "pywinauto", "pyautogui", "pyperclip", "pynput", "PySide2",
+        "pywinauto", "pyautogui", "pyperclip", "pynput", "PySide2", "keyring",
         "win10toast", "python-dotenv", "PySimpleGUI", "pillow", "opencv-python",
         "numpy==1.19.3", "mss", "pytesseract", "mouse", "robotframework"
     ],
