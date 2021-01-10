@@ -1,7 +1,7 @@
 ![](https://i.imgur.com/ClOul8Y.png)
 
 # RPAPY - Open Source Tool for Robotic Process Automatition
-[Medium](https://medium.com/@codigo100cera) | [Linkedin](https://www.linkedin.com/in/mcsilva-csc/) | [Youtube](https://www.youtube.com/channel/UCbrw7-reRWpQD1JBubCl4QQ?view_as=subscriber) | [Telegram](https://t.me/joinchat/C_ECNVWoSae_ebzcjfM33w)
+[Medium](https://medium.com/@codigo100cera) | [Linkedin](https://www.linkedin.com/in/mcsilva-csc/) | [Youtube](https://www.youtube.com/channel/UCbrw7-reRWpQD1JBubCl4QQ?view_as=subscriber) | [Telegram](https://t.me/joinchat/C_ECNVWoSae_ebzcjfM33w) | [.Dev](https://dev.to/codigo100cera) | [Twitch](https://www.twitch.tv/codigo100cera)
 
 __RPAPY__ is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 
