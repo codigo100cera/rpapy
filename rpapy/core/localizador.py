@@ -11,10 +11,9 @@ from PIL import Image
 from pywinauto import Desktop
 
 from .config import Config
-from .screenshots import (ImageNotDisappearError, ImageNotFoundError,
-                          capiturar_imagem)
-from rpapy.core.uploads import create_python_default_dirs
-
+from .snipps.snippingtools import (ImageNotDisappearError, ImageNotFoundError, close_window_with_title)
+from .snipps import capture_image_crop, update_image
+from rpapy.core.loads import create_python_default_dirs
 
 MODO_MANUTENCAO = False
 if Config.VERIFICAR_MODO:
@@ -35,8 +34,11 @@ path_dir_error_images = Path(path_dir_resources, Config.IMAGES_ERROR_DIR_NAME)
 
 
 def localizar_na_tela(image, *args, **kwargs):
-    img = Image.open(image)
-    return pyautogui.locateOnScreen(img, *args, **kwargs)
+    try:
+        img = Image.open(image)
+        return pyautogui.locateOnScreen(img, *args, **kwargs)
+    except ValueError:
+        pass
 
 
 class LocalizadorImagem():
@@ -154,7 +156,7 @@ class LocalizadorImagem():
 
                     if coordenada is not None:
                         continue
-                except ValueError:
+                except Exception:
                     coordenada = None
                     
                 # Entra no bloco se o tempo de execução do loop exceder o max_wait.

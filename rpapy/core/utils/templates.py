@@ -13,6 +13,7 @@ VARIAVEIS_AMBIENTE = """###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
 #VERIFICAR_MODO=True
 #ARQUIVO_TEMPORARIO_ATIVO=False
 #NOME_ARQUIVO_TEMPORARIO=temp.txt
+#ONLY_IMAGE_PATH=False
 """
 
 ##########################################################################################
@@ -20,27 +21,25 @@ MODULES_IMPORT_PY = '''"""[summary]
 """
 
 import time
+from pathlib import Path
 
 import pyautogui
 import pytesseract as ocr
 from pywinauto import Desktop
-from win10toast import ToastNotifier
-from pathlib import Path
-
-from rpapy.core import (click_coord, click_vision, double_click_coord,
-                                double_click_vision, get_element_vision, wait_element_vision,
-                                triple_click_coord, triple_click_vision, open_executable)
-from rpapy.core.screenshots import get_screenshot_region
+from rpapy.activities import (click_coord, click_vision, contextlib, double_click_coord, 
+                              double_click_vision, drag_to_vision, drag_vision, get_element_coord, 
+                              get_element_vision, get_path_by_image_name, get_text_ocr_region, 
+                              get_text_ocr_vision, get_windows_title, max_wait_attr, open_executable, 
+                              prepare_text_to_pyautogui, registrar_credencial, toast_process_start_notifier, 
+                              triple_click_coord, triple_click_vision, wait_element_vision, write_text_coord, 
+                              write_text_vision)
 from rpapy.core.localizador import (ImageNotFoundError, LocalizadorImagem,
-                                 image_optmization, max_wait_attr)
+                                    image_optmization, max_wait_attr)
 
 #######################DEFINE#######################
+toast_process_start_notifier()
 get_coordenadas = LocalizadorImagem()
 #######################DEFINE#######################
-
-toaster = ToastNotifier()
-toaster.show_toast('Robo.py iniciando processo', duration=5, threaded=True)
-print('Robo.py iniciando processo...')
 
 
 '''
@@ -49,7 +48,7 @@ print('Robo.py iniciando processo...')
 MODULES_IMPORT_ROBOT = '''*** Settings ***
 Documentation    Documentação da Suite de Tasks Robot Framework
 
-Library     rpapy.core.activities
+Library     rpapy.activities
 Resource    ../resources/keywords.robot
   
 *** Variables ***
@@ -69,7 +68,7 @@ Keyword principal
 ##########################################################################################
 MODULES_IMPORT_RESOURCE = '''*** Settings ***
 Documentation    Documentacao das Keywords da Suite de Tasks
-Library     rpapy.core.activities
+Library     rpapy.activities
   
 
 *** Variables ***
@@ -163,7 +162,7 @@ CONTROL_RPA_2 = """
 CONTROL_RPA_OCR_PY = """
     # [Contexto - Janela]: 
     # [Descricao]: 
-    im_{0} = pyautogui.screenshot(region=get_screenshot_region{1})
+    im_{0} = pyautogui.screenshot(region={1})
     str_{0} = ocr.image_to_string(im_{0}, lang='{2}')
     print('>>>>str_ocr>>>>', str_{0})
     # im_{0}.show()

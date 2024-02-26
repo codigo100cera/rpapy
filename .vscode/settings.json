@@ -1,0 +1,22 @@
+{
+    "material-icon-theme.folders.associations": {
+        "core": "rules",
+        "adapters": "pipe",
+        "external": "tools",
+        "pages": "rules",
+        "user": "admin",
+        "notebook": "lib",
+        "pagesection": "lib",
+        "sentence": "lib",
+        "alembic": "config",
+        ".streamlit": "config",
+        ".documentation": "resource",
+        "persistence": "database",
+        "meu_app": "app"       
+    },
+    "files.exclude": {
+        "**/*.pyc": {"when": "$(basename).py"},
+        "**/__pycache__": true,
+        "**/*.pytest_cache": true,
+    }
+}

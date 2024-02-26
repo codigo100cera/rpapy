@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation    Documentação da Suite de Tasks Robot Framework
 
-Library     rpapy.core.activities
 Library     ../resources/custom_keywords.py
 Resource    ../resources/keywords.robot
 

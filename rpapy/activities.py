@@ -1,13 +1,11 @@
 import contextlib
-import os
-from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 from pywinauto import Desktop
 
-from .localizador import LocalizadorImagem, max_wait_attr
-from .prepare_text import prepare_text_to_pyautogui
-from .screenshots import ImageNotFoundError, get_screenshot_region
+from rpapy.core.localizador import LocalizadorImagem, max_wait_attr
+from rpapy.core.prepare_text import prepare_text_to_pyautogui
+from rpapy.core.snipps.snippingtools import ImageNotFoundError
 
 ###########################################################
 _identifier_img = LocalizadorImagem()
@@ -47,11 +45,15 @@ def get_element_vision(image_name: str, *args,
         move_y: int=0,
         delay: float=0.0,
         ignore_error:bool=False,
+        ignore_set_focus=False,
+        click_before_typing=None,
         arguments: tuple=(),
         kwarguments: dict={},
         **kwargs):
-    
 
+    from time import sleep
+    
+    sleep(float(before))
     identifier_img = identifier_img or _identifier_img
     
     coordinate = None
@@ -73,18 +75,18 @@ def get_element_vision(image_name: str, *args,
     if attr_name is None:
         return coordinate
 
-    from time import sleep
-
     args = args + arguments
-    kwargs.update(kwarguments)
+    kwargs.update(kwarguments)    
     
-    sleep(float(before))
     if backend is None:
         import pyautogui
 
         if execute is True:
             pyautogui_attr = getattr(pyautogui, attr_name)
             if attr_name in 'press type_write write':
+                if click_before_typing:
+                    pyautogui.click(*coordinate, interval=float(delay), button=kwargs.get('button', 'left'))                    
+                    sleep(.2)
                 pyautogui_attr(*args, interval=float(delay), **kwargs)
             else:
                 pyautogui_attr(*coordinate, *args, interval=float(delay), **kwargs)
@@ -93,10 +95,14 @@ def get_element_vision(image_name: str, *args,
 
     elif backend in ['win32', 'uia']:
         UI_element = _get_ui_element(*coordinate, attr_name=attr_name, backend=backend, wait_attr=wait_attr)
-        UI_element.set_focus()
+        if not ignore_set_focus:
+            UI_element.set_focus()
         if execute is True:
             UI_element_attr = getattr(UI_element, attr_name)
             if attr_name in 'type_keys':
+                if click_before_typing:
+                    UI_element.click_input(button=kwargs.get('button', 'left'))
+                    sleep(.2)
                 UI_element_attr(*args, with_spaces=True, pause=float(delay), **kwargs)
             elif attr_name == 'triple_click_input':
                 UI_element_attr = getattr(UI_element, 'click_input')
@@ -125,7 +131,8 @@ def write_text_vision(image_name: str,*,
         interval: float=None,
         confidence: float=None,
         wait_attr: float=5.0,
-        ignore_error:bool=False):
+        ignore_error:bool=False,
+        ignore_set_focus: bool=False):
 
     attr_name = 'type_keys' if backend is not None else 'press'
     if backend is None:
@@ -136,7 +143,7 @@ def write_text_vision(image_name: str,*,
     return get_element_vision(image_name, text, identifier_img=identifier_img, backend=backend, max_wait=max_wait, 
                                 attr_name=attr_name, wait_vanish=wait_vanish, move_x=move_x, move_y=move_y, delay=delay, 
                                 before=before, after=after, interval=interval, confidence=confidence, wait_attr=wait_attr, 
-                                execute=execute, ignore_error=ignore_error)
+                                execute=execute, ignore_error=ignore_error, ignore_set_focus=ignore_set_focus)
 
 
 def click_vision(image_name: str,*,
@@ -178,7 +185,8 @@ def double_click_vision(image_name: str,*,
         wait_attr: float=5.0,
         move_x: int=0,
         move_y: int=0,
-        ignore_error: bool=False):
+        ignore_error: bool=False,
+        ignore_set_focus: bool=False):
     
     attr_name = 'double_click_input' if backend is not None else 'doubleClick'
     execute = True
@@ -186,7 +194,7 @@ def double_click_vision(image_name: str,*,
     return get_element_vision(image_name,attr_name=attr_name, identifier_img=identifier_img, backend=backend, 
                                 button=button, delay=delay, before=before, after=after, max_wait=max_wait, interval=interval, 
                                 confidence=confidence, wait_vanish=wait_vanish, wait_attr=wait_attr, move_x=move_x, move_y=move_y,
-                                ignore_error=ignore_error, execute=execute)
+                                ignore_error=ignore_error, execute=execute, ignore_set_focus=ignore_set_focus)
 
 
 def triple_click_vision(image_name: str,*,
@@ -221,7 +229,8 @@ def get_element_coord(x, y, *args,
         before: float=0.0,
         after: float=0.0,
         delay: float=0.0,
-        execute: bool=True,        
+        execute: bool=True,
+        click_before_typing=None,        
         arguments: tuple=(),
         kwarguments: dict={},
         wait_attr: float=5.0,
@@ -229,12 +238,12 @@ def get_element_coord(x, y, *args,
 
     from time import sleep
 
+    sleep(float(before))    
     coordinate = int(float(x)), int(float(y))
 
     args = args + arguments
     kwargs.update(kwarguments)
     
-    sleep(float(before))
     if backend is None:
         import pyautogui
 
@@ -327,7 +336,7 @@ def get_text_ocr_vision(image_name, region:Tuple[int], *args, identifier_img: Lo
 
     coordinate = wait_element_vision(image_name,identifier_img=identifier_img, **kwargs)
     
-    image_region = screenshot(region=get_screenshot_region(*region))
+    image_region = screenshot(region=region)
     ocr_text_result = ocr.image_to_string(image_region, lang=lang)
     return ocr_text_result
 
@@ -336,10 +345,31 @@ def get_text_ocr_region(region:Tuple[int], lang: str='por') -> str:
     import pytesseract as ocr
     from pyautogui import screenshot
 
-    image_region = screenshot(region=get_screenshot_region(*region))
+    image_region = screenshot(region=region)
     ocr_text_result = ocr.image_to_string(image_region, lang=lang)
     return ocr_text_result
-    
+
+
+def drag_to_vision(image:str, x:int, y:int, *args, **kwargs):
+    """TODO: Implementation
+
+    Args:
+        image (str): [description]
+        x (int): [description]
+        y (int): [description]
+    """
+
+
+def drag_vision(image:str, x:int, y:int, *args, **kwargs):
+    """TODO: Implementation
+
+    Args:
+        image (str): [description]
+        x (int): [description]
+        y (int): [description]
+    """
+
+
 
 def registrar_credencial(usuario, sistema='Robot_framework'):
     import keyring
@@ -369,6 +399,7 @@ def registrar_credencial(usuario, sistema='Robot_framework'):
 
 
 def open_executable(exec_name: str, window_title: str, *,work_dir: str, max_try: int=5, maximized: bool=True ):    
+    from pathlib import Path
     from subprocess import Popen
     from time import sleep
 
@@ -419,3 +450,7 @@ def get_windows_title(window_title: str):
             break
     return windows_list
 
+
+def get_path_by_image_name(image_name: str)-> str:
+    from rpapy.core.localizador import get_absolute_path_by_image_name
+    return get_absolute_path_by_image_name(image_name)

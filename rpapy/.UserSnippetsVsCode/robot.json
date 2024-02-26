@@ -131,7 +131,14 @@
 			"$0"
 		],
 		"description": "Keyword to Wait Element in the UI"
+	},
+	
+	"Robot Get Image Path":{
+		"prefix": "Get Path by Image Name",
+		"body": [
+			"Get Path by Image Name    ${1:image_name}",
+			"$0"
+		],
+		"description": "Return image absolute path by image name"
 	}
-        
-        
 }

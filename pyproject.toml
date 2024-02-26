@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "rpapy"
+version = "1.0.3"
+description = "RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others."
+authors = ["Codigo Sem Cera <codigo100cera@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/codigo100cera/rpapy"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["rpa", "robotframework", "tools"]
+include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png"]
+
+[tool.poetry.dependencies]
+python = "<3.13,>=3.9"
+pywinauto = "^0.6.8"
+pyautogui = "^0.9.54"
+pyside6 = "^6.6.2"
+pynput = "^1.7.6"
+win10toast = "^0.9"
+pyperclip = "^1.8.2"
+python-dotenv = "^1.0.1"
+pysimplegui = "^5.0.2"
+rpaframework = "^28.3.0"
+pytesseract = "^0.3.10"
+mouse = "^0.7.1"
+numpy = "^1.26.4"
+opencv-python = "^4.9.0.80"
+
+[tool.poetry.scripts]
+rpapy = 'rpapy.__main__:main'
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.1"
+pytest-cov = "^4.1.0"
+taskipy = "^1.12.2"
+bumpver = "^2023.1129"
+
+[tool.poetry.group.doc.dependencies]
+mkdocs-material = "^9.5.11"
+mkdocstrings = "^0.24.0"
+mkdocstrings-python = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "--doctest-modules"
+
+[tool.poetry_bumpversion.file."rpapy/__main__.py"]
+search = '- rpapy v{current_version}'
+replace = '- rpapy v{new_version}'
+
+[[tool.poetry_bumpversion.replacements]]
+files = ["rpapy/__init__.py",]
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'

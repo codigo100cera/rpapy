@@ -31,9 +31,10 @@ class Config:
     IMAGES_ERROR_DIR_NAME = os.environ.get('IMAGES_ERROR_DIR_NAME') or 'images_error'
     TASKS_DIR_NAME = os.environ.get('TASKS_DIR_NAME') or 'tasks'
     MAX_WAIT_MANUTENCAO = int(os.environ.get('MAX_WAIT_MANUTENCAO') or 5)
-    VERIFICAR_MODO = True if os.environ.get('VERIFICAR_MODO') else False
-    ARQUIVO_TEMPORARIO_ATIVO = True if os.environ.get('IMAGES_DIR_NAME') else False
-    NOME_ARQUIVO_TEMPORARIO = os.environ.get('IMAGES_DIR_NAME') or 'temp.txt'
+    VERIFICAR_MODO = bool(os.environ.get('VERIFICAR_MODO') or False)
+    ARQUIVO_TEMPORARIO_ATIVO = bool(os.environ.get('ARQUIVO_TEMPORARIO_ATIVO') or False)
+    NOME_ARQUIVO_TEMPORARIO = os.environ.get('NOME_ARQUIVO_TEMPORARIO') or 'temp.txt'
+
 
     @classmethod
     def get_config(cls):
@@ -47,5 +48,5 @@ class Config:
             cls.MAX_WAIT_MANUTENCAO,
             cls.VERIFICAR_MODO,
             cls.ARQUIVO_TEMPORARIO_ATIVO,
-            cls.NOME_ARQUIVO_TEMPORARIO
+            cls.NOME_ARQUIVO_TEMPORARIO,
         )

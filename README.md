@@ -1,7 +1,7 @@
 ![](https://i.imgur.com/ClOul8Y.png)
 
 # RPAPY - Open Source Tool for Robotic Process Automatition
-[Medium](https://medium.com/@codigo100cera) | [Linkedin](https://www.linkedin.com/in/mcsilva-csc/) | [Youtube](https://www.youtube.com/channel/UCbrw7-reRWpQD1JBubCl4QQ?view_as=subscriber) | [Telegram](https://t.me/joinchat/C_ECNVWoSae_ebzcjfM33w) | [.Dev](https://dev.to/codigo100cera) | [Twitch](https://www.twitch.tv/codigo100cera)
+[Medium](https://medium.com/@codigo100cera) | [Linkedin](https://www.linkedin.com/in/mcsilva-csc/) | [Youtube](https://www.youtube.com/channel/UCbrw7-reRWpQD1JBubCl4QQ?view_as=subscriber) | [Telegram](https://t.me/joinchat/C_ECNVWoSae_ebzcjfM33w)
 
 __RPAPY__ is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 
@@ -28,12 +28,12 @@ However, it is advisable to use a virtual environment for an isolated installati
 pip install virtualenv
 mkdir <your-project-name>
 cd <your-project-name>
-virtualenv  <your-venv-name>
-activate <your-venv-name>
+virtualenv create rpapy-env
+activate rpapy-ev
 pip install rpapy
 ```
 
-After installed, the construction of the project structure is accomplished by executing the following command in the terminal:
+The construction of the project structure is accomplished by executing the following command in the terminal:
 ```
 rpapy
 ```
@@ -55,11 +55,7 @@ The hotkeys menu to be used will be displayed after executing the above command.
 
 To run the sample implementation, perform the following steps:
 
-- Activate the hotkey ```<CTRL>+<CMD>+E```.
-
-- In the messagebox enter ```your-file-name.robot``` or keep the default name ```main.robot```.
-
-- Configure the ```.env``` file in the root directory of the project.
+- Configure the .env file in the root directory of the project.
 
 ```
 ###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
