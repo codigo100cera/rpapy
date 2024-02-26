@@ -101,7 +101,7 @@ Under the hood, RPAPY is built on some of the greatest open source libraries. Wi
 - [PyAutoGUI](https://github.com/asweigart/pyautogui)
 - [Pynput](https://pypi.org/project/pynput/)
 - [Pyperclip](https://pypi.org/project/pyperclip/)
-- [PySide2](https://pypi.org/project/PySide2/)
+- [PySide6](https://pypi.org/project/PySide2/)
 - [PySimpleGUI](https://pypi.org/project/PySimpleGUI/)
 - [Pytesseract](https://pypi.org/project/pytesseract/)
 - [PythonDotenv](https://pypi.org/project/python-dotenv/)

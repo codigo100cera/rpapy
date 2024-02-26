@@ -6,13 +6,16 @@ authors = ["Codigo Sem Cera <codigo100cera@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/codigo100cera/rpapy"
+include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png"]
+keywords = ["rpa", "robotframework", "automations", "tools"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
+    "Enviroment :: Console",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
 ]
-keywords = ["rpa", "robotframework", "tools"]
-include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png"]
+
+[tool.poetry.urls]
+"Repository" = "https://github.com/codigo100cera/rpapy"
 
 [tool.poetry.dependencies]
 python = "<3.13,>=3.9"
@@ -45,7 +48,7 @@ mkdocstrings = "^0.24.0"
 mkdocstrings-python = "^1.8.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
