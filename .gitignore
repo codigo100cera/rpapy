@@ -6,3 +6,5 @@ dist/
 rpapy.egg-info
 images_error/
 log/
+resources/
+tasks/
