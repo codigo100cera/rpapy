@@ -10,7 +10,6 @@ include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png"]
 keywords = ["rpa", "robotframework", "automations", "tools"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
-    "Enviroment :: Console",
     "Programming Language :: Python",
 ]
 
