@@ -12,7 +12,7 @@ from pywinauto import Desktop
 
 from .config import Config
 from .snipps.snippingtools import (ImageNotDisappearError, ImageNotFoundError, close_window_with_title)
-from .snipps import capture_image_crop, update_image
+from .snipps import update_image
 from rpapy.core.loads import create_python_default_dirs
 
 MODO_MANUTENCAO = False
@@ -162,7 +162,7 @@ class LocalizadorImagem():
                 # Entra no bloco se o tempo de execução do loop exceder o max_wait.
                 if time.time() - start_time > max_wait_local:
                     if self._modo_manutencao:
-                        atualizou = atualizar_imagem(image_region.get('image'))
+                        atualizou = update_image(image_region.get('image'))
                         if atualizou:
                             self._screenshots = mapear_imagens()
                             image_region = self._screenshots[image_name]
@@ -208,7 +208,7 @@ class LocalizadorImagem():
                         # recupera a imagem do mapa, passando o nome enviado por parâmetro
                         image_region = self._screenshots[image_name]             
                     
-                        atualizou = atualizar_imagem(image_region.get('image'))
+                        atualizou = update_image(image_region.get('image'))
                         if atualizou:
                             self._screenshots = mapear_imagens()
                             image_region = self._screenshots[image_name]
@@ -235,51 +235,6 @@ class LocalizadorImagem():
 
                 # Efetua um intervalo parada entre os loop de tentativa de encontrar a imagem
                 time.sleep(interval_local)
-
-
-def atualizar_imagem(nome_img: str) -> bool:
-    """Ulizado quando o RPA esta no modo manutenção para efetuar a troca das imagen que não foi encontrada
-    
-    Arguments:
-        nome_img {str} -- [path absoluto do nome imagem para ser trocada]
-    
-    Raises:
-        ImageNotFoundError: [Exception lançada quando a troca da img for cancelada]
-    
-    Returns:
-        [bool] -- [retorna True se a imagem foi trocada, senão False]
-    """
-    # Recupera apenas o nome da imagem sem dados da região para utilizar na capitura da nova imagem
-    nome_without_path = nome_img.split('/')[-1].split('-')[0]
-
-    # Abre a imagem a ser trocada para ser exibida pelo visualizador de imagens
-    im = Image.open(nome_img)
-    im.show()
-
-    # Apresenta aviso de confirmação com nome do path absoluto da imagem que será trocada,
-    option = pyautogui.confirm(title='RPAPY', text=f'A imagem "{nome_without_path}" será alterada!', buttons=['OK', 'CANCEL'])
-
-    # Fecha janela do visualizador de imagem após confirmacao de troca
-    fechar_visualizador_fotos('fotos')
-
-    # Lança a exception caso a troca seja cancelada na caixa de confirmação
-    if option is None or option == 'CANCEL':
-        raise ImageNotFoundError(f'A imagem "{nome_without_path}", não foi encontrada!')
-    
-    # executa o método de capitura de imagem e verifica se a troca foi concluida
-    # Se concluida, efetua a exclusão da antiga pelo nome original e retorna True
-    # Se cancelada retorna False
-    if capiturar_imagem(nome_without_path, trocar_img=True):
-        # Recupera o objeto path com o nome original da imagem que foi trocada para ser apagado
-        path = Path(nome_img)
-        try:
-            path.unlink()
-        except FileNotFoundError:
-            pass
-        # Fecha o visualizador da nova imagem capiturada.
-        fechar_visualizador_fotos('fotos')
-        return True
-    return False
 
 
 def fechar_visualizador_fotos(title: str):
