@@ -25,12 +25,12 @@ pynput = "^1.7.6"
 win10toast = "^0.9"
 pyperclip = "^1.8.2"
 python-dotenv = "^1.0.1"
-pysimplegui = "^5.0.2"
 rpaframework = "^28.3.0"
 pytesseract = "^0.3.10"
 mouse = "^0.7.1"
 numpy = "^1.26.4"
 opencv-python = "^4.9.0.80"
+pysimplegui = "<5.0,>=4.0"
 
 [tool.poetry.scripts]
 rpapy = 'rpapy.__main__:main'
