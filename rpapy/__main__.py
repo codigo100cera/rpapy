@@ -6,12 +6,22 @@
 import sys
 from pathlib import Path
 
-import pyautogui
+sys.coinit_flags = 2
+
+import warnings
+from unittest.mock import patch
+
 import pyperclip
 from pynput import keyboard, mouse
 from PySide6.QtCore import QObject, QThread, Signal
 from PySide6.QtWidgets import QApplication
-from pywinauto import Desktop
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from pywinauto import Desktop
+
+with patch("ctypes.windll.user32.SetProcessDPIAware", autospec=True):
+    import pyautogui  # noqa # pylint:disable=unused-import
 
 from rpapy.core.loads import (create_default_script_file,
                               create_robot_default_dirs, load_robot_example)
@@ -204,7 +214,7 @@ def main():
     if app is None:
         app = QApplication(sys.argv)
     agent = AgentPy()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
