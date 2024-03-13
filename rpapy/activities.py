@@ -12,11 +12,7 @@ _identifier_img = LocalizadorImagem()
 ###########################################################
 
 def toast_process_start_notifier():
-    from win10toast import ToastNotifier
-    
-    toaster = ToastNotifier()
-    toaster.show_toast('Robo.py iniciando processo', duration=5, threaded=True)
-    print('Robo.py iniciando processo...')
+    print('\n>>>> Robo.py iniciando processo...')
 
 
 def _get_ui_element(x: int, y: int,*,attr_name: str, backend: Desktop, wait_attr: float):

@@ -107,5 +107,3 @@ Under the hood, RPAPY is built on some of the greatest open source libraries. Wi
 - [PythonDotenv](https://pypi.org/project/python-dotenv/)
 - [Pwinauto](https://pypi.org/project/pywinauto/)
 - [RobotFramework](https://pypi.org/project/robotframework/)
-- [Win10toast](https://pypi.org/project/win10toast/)
-

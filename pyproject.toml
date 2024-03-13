@@ -17,12 +17,11 @@ classifiers = [
 "Repository" = "https://github.com/codigo100cera/rpapy"
 
 [tool.poetry.dependencies]
-python = "<3.13,>=3.9"
+python = "<3.13,>=3.10"
 pywinauto = "^0.6.8"
 pyautogui = "^0.9.54"
 pyside6 = "^6.6.2"
 pynput = "^1.7.6"
-win10toast = "^0.9"
 pyperclip = "^1.8.2"
 python-dotenv = "^1.0.1"
 rpaframework = "^28.3.0"
@@ -40,6 +39,7 @@ pytest = "^8.0.1"
 pytest-cov = "^4.1.0"
 taskipy = "^1.12.2"
 bumpver = "^2023.1129"
+ipython = "^8.22.2"
 
 [tool.poetry.group.doc.dependencies]
 mkdocs-material = "^9.5.11"

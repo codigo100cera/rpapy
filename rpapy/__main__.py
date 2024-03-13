@@ -12,7 +12,6 @@ from pynput import keyboard, mouse
 from PySide6.QtCore import QObject, QThread, Signal
 from PySide6.QtWidgets import QApplication
 from pywinauto import Desktop
-from win10toast import ToastNotifier
 
 from rpapy.core.loads import (create_default_script_file,
                               create_robot_default_dirs, load_robot_example)
@@ -114,9 +113,6 @@ class AgentPy(QObject):
         self._nome_arquivo = 'main.robot'
         self.backend = 'uia'
 
-        self.toaster = ToastNotifier()       
-        self.toaster.show_toast('Agente RPA acionado.', duration=2, threaded=True)
-
         self.hotkeys_thread = HotkeysThread(self)
         self.hotkeys_thread.alterar_arquivo.connect(self._alterar_arquivo)
         self.hotkeys_thread.capiturar_imagem.connect(self._capiturar_imagem)
@@ -136,7 +132,7 @@ class AgentPy(QObject):
         self._alterar_arquivo()
     
     def _turn_on(self):
-        HOTKEYS_ACTIONS = """***Turn on AgentPy***
+        HOTKEYS_ACTIONS = """\n***Turn on AgentPy***
         **************Teclas de atalho*************
         <ctrl>+<alt>+p: capiturar imagem ou ocr
         <ctrl>+<alt>+r: alterar nome do arquivo
@@ -153,7 +149,7 @@ class AgentPy(QObject):
     def _turn_off(self):
         print('\nTurn off')
         self.mouse_thread.listener.stop()
-        self.toaster.show_toast('Agente RPA desligado.', duration=2, threaded=True)
+        print('>>>> Agente RPA desligado.')
         exit(0)
 
     def _show_config(self):
@@ -164,11 +160,11 @@ class AgentPy(QObject):
 
     def set_backend_uia(self, backend: str):
         self.backend = backend
-        self.toaster.show_toast('Backend alterado para "UIA".', duration=1.5, threaded=True)             
+        print('>>>> Backend alterado para "UIA".')             
 
     def set_backend_win32(self, backend: str):
         self.backend = backend        
-        self.toaster.show_toast('Backend alterado para "WIN32".', duration=1.5, threaded=True)             
+        print('>>>> Backend alterado para "WIN32".')             
     
     def _backend_inspect(self):
         x, y = pyautogui.position()
@@ -187,8 +183,8 @@ class AgentPy(QObject):
         self._nome_arquivo = file_name
     
     def _update_image(self):
-        from rpapy.core.localizador import map_images
         from rpapy.core.config import Config
+        from rpapy.core.localizador import map_images
         
         default_name  = pyperclip.paste()
         image_name = pyautogui.prompt(text='Insirá o nome da imagem a ser atualizada', title='Atualização de imagem', default=default_name)    
@@ -201,7 +197,6 @@ class AgentPy(QObject):
             update_image(image_name_path)
         else:
             pyautogui.alert(title='RPAPY', text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
-
 
 
 def main():
