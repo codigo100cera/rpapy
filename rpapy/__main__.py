@@ -5,10 +5,6 @@
 """
 import sys
 from pathlib import Path
-
-sys.coinit_flags = 2
-
-import warnings
 from unittest.mock import patch
 
 import pyperclip
@@ -16,16 +12,13 @@ from pynput import keyboard, mouse
 from PySide6.QtCore import QObject, QThread, Signal
 from PySide6.QtWidgets import QApplication
 
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    from pywinauto import Desktop
-
 with patch("ctypes.windll.user32.SetProcessDPIAware", autospec=True):
     import pyautogui  # noqa # pylint:disable=unused-import
 
 from rpapy.core.loads import (create_default_script_file,
                               create_robot_default_dirs, load_robot_example)
 from rpapy.core.snipps import capture_image_crop, update_image
+from rpapy.core.utils import draw_outline
 from rpapy.core.utils.messages import message_to_set_timeout
 
 
@@ -143,6 +136,7 @@ class AgentPy(QObject):
     
     def _turn_on(self):
         HOTKEYS_ACTIONS = """\n***Turn on AgentPy***
+        
         **************Teclas de atalho*************
         <ctrl>+<alt>+p: capiturar imagem ou ocr
         <ctrl>+<alt>+r: alterar nome do arquivo
@@ -179,7 +173,8 @@ class AgentPy(QObject):
     def _backend_inspect(self):
         x, y = pyautogui.position()
         get_position_element(x, y)
-        Desktop(backend=self.backend).from_point(x, y).draw_outline(thickness=3)
+        draw_outline(x, y, backend=self.backend)
+
 
     def _capiturar_imagem(self):
         capture_image_crop(self._nome_arquivo)
@@ -206,7 +201,7 @@ class AgentPy(QObject):
         if image_name_path is not None:
             update_image(image_name_path)
         else:
-            pyautogui.alert(title='RPAPY', text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
+            pyautogui.alert(title='RPAPY',text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
 
 
 def main():
