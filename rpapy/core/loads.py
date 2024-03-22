@@ -1,6 +1,7 @@
 import contextlib
 import os
 from pathlib import Path
+import shutil
 
 import pyautogui
 
@@ -25,11 +26,8 @@ def load_robot_example():
     # The directory containing this file
     HERE = os.path.abspath(os.path.dirname(__file__))
     
-    path_desenho_robotframework = Path(Config.BASE_DIR, 'resources/desenhos/robotframework.txt')
-    replace_file_confirm(path_desenho_robotframework, paint_robot.ROBOTFRAMEWORK)
-    
-    path_desenho_borboleta = Path(Config.BASE_DIR, 'resources/desenhos/borboleta.txt')
-    replace_file_confirm(path_desenho_borboleta, paint_robot.BORBOLETA)
+    path_desenho_codigo100cera = Path(Config.BASE_DIR, 'resources/desenhos/codigo100cera.txt')
+    replace_file_confirm(path_desenho_codigo100cera, paint_robot.CODIGO100CERA)
     
     path_custom_keywords = Path(Config.BASE_DIR, 'resources/custom_keywords.py')
     replace_file_confirm(path_custom_keywords, paint_robot.CUSTOM_KEYWORDS)
@@ -40,21 +38,29 @@ def load_robot_example():
     path_main_robot = Path(Config.BASE_DIR, 'tasks/main.robot')
     replace_file_confirm(path_main_robot, paint_robot.MAIN_ROBOT)
 
+    origin_file_svg = Path(HERE) / 'utils/imagens/template_win11_screen_1920x1080.svg'
+    svg_template_path = Path(Config.BASE_DIR, 'resources/desenhos/template_win11_screen_1920x1080.svg')
+    replace_file_confirm(svg_template_path, origin_file=origin_file_svg)
 
-def replace_file_confirm(path_file: Path, content: str):
+
+def replace_file_confirm(path_file: Path, content: str = None,* , origin_file: Path = None):
     if path_file.exists():
         text = f'O arquivo "{path_file.name}" será subistuido, para confirmar clique em OK.'
         opcao = pyautogui.confirm(text=text, title='RPA-PY', buttons=['OK','CANCEL'])        
         if opcao is not None or opcao != 'CANCEL':
-            if '.py' not in path_file.name:
-                path_file.write_text(content, encoding='utf-8')
-            else:
+            if '.py' in path_file.name:
                 path_file.write_text(content)
+            elif '.svg' in path_file.name:
+                shutil.copy(origin_file, path_file)
+            else:
+                path_file.write_text(content, encoding='utf-8')            
     else:
-        if '.py' not in path_file.name:
-                path_file.write_text(content, encoding='utf-8')
+        if '.py' in path_file.name:
+                path_file.write_text(content)
+        elif '.svg' in path_file.name:
+            shutil.copy(origin_file, path_file)
         else:
-            path_file.write_text(content)
+            path_file.write_text(content, encoding='utf-8')
 
 
 def create_robot_default_dirs():

@@ -27,6 +27,9 @@ if MODO_MANUTENCAO == 'CANCEL':
 if MODO_MANUTENCAO is False:
     pyautogui.FAILSAFE = False
 
+if Config.FAILSAFE_OFF:    
+    pyautogui.FAILSAFE = False
+
 path_base_dir = Path(Config.BASE_DIR)
 path_dir_resources = Path(path_base_dir, Config.RESOURCES_DIR_NAME)
 path_dir_images =  Path(path_dir_resources, Config.IMAGES_DIR_NAME)
@@ -124,7 +127,7 @@ class LocalizadorImagem():
         time.sleep(self.wait_before)
 
         # Move o mouse para um ponto de descanso na tela para não interferir na busca da imagem
-        pyautogui.moveTo(700,10,0)
+        pyautogui.moveTo(700,5,0)
 
         # Inicia a coordenada com o padrão flag None
         coordenada = None

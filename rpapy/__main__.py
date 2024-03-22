@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- rpapy v1.0.6
+- rpapy v1.0.7
 """
 import sys
 from pathlib import Path
@@ -55,7 +55,7 @@ class HotkeysThread(QThread):
     set_backend_uia = Signal(object)
     set_backend_win32 = Signal(object)
     show_config = Signal()
-    upload_example = Signal()
+    load_example = Signal()
     inspect_element = Signal()
     update_image = Signal()
     off = Signal(object)
@@ -85,8 +85,8 @@ class HotkeysThread(QThread):
         def show_config():
             self.show_config.emit()
 
-        def upload_example():
-            self.upload_example.emit()
+        def load_example():
+            self.load_example.emit()
 
         def turn_off_agentpy():
             h.stop()
@@ -98,7 +98,7 @@ class HotkeysThread(QThread):
                 '<ctrl>+<alt>+u': update_image,
                 '<ctrl>+i':       inspect_element,
                 '<ctrl>+<cmd>+c': show_config,
-                '<ctrl>+<cmd>+e': upload_example,
+                '<ctrl>+<cmd>+e': load_example,
                 '<ctrl>+<cmd>+x': turn_off_agentpy}) as h:
             h.join()
       
@@ -123,7 +123,7 @@ class AgentPy(QObject):
         self.hotkeys_thread.set_backend_win32.connect(self.set_backend_win32)
         self.hotkeys_thread.inspect_element.connect(self._backend_inspect)
         self.hotkeys_thread.show_config.connect(self._show_config)
-        self.hotkeys_thread.upload_example.connect(self._upload_example)
+        self.hotkeys_thread.load_example.connect(self._upload_example)
         self.hotkeys_thread.update_image.connect(self._update_image)
         self.hotkeys_thread.off.connect(self._turn_off)
         self.hotkeys_thread.start()
@@ -144,7 +144,7 @@ class AgentPy(QObject):
         <ctrl>+<alt>+u: atualizar imagem do elem
         <ctrl>+i:       inspecionar elemento de UI
         <ctrl>+<cmd>+c: exibir configuração atual
-        <ctrl>+<cmd>+e: upload implemetação exemplo
+        <ctrl>+<cmd>+e: load implemetação exemplo
         <ctrl>+<cmd>+x: desligar o Agente
         *******************************************
         """
@@ -174,7 +174,6 @@ class AgentPy(QObject):
         x, y = pyautogui.position()
         get_position_element(x, y)
         draw_outline(x, y, backend=self.backend)
-
 
     def _capiturar_imagem(self):
         capture_image_crop(self._nome_arquivo)

@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "rpapy"
-version = "1.0.6"
+version = "1.0.7"
 description = "RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others."
 authors = ["Codigo Sem Cera <codigo100cera@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/codigo100cera/rpapy"
-include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png"]
+include = ["LICENSE", "README.md", "*.cfg", "rpapy/core/utils/imagens/*.png", "rpapy/core/utils/imagens/*.svg"]
 keywords = ["rpa", "robotframework", "automations", "tools"]
 classifiers = [
     "License :: OSI Approved :: MIT License",

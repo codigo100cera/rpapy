@@ -60,15 +60,16 @@ To run the sample implementation, perform the following steps:
 ```
 ###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
 
-#RESOURCES_DIR_NAME=resources
-#RESOURCES_KEYWORDS_FILE_NAME=keywords.robot
-#IMAGES_DIR_NAME=images
-#IMAGES_ERROR_DIR_NAME=images_error
-#TASKS_DIR_NAME=tasks
+# RESOURCES_DIR_NAME=resources
+# RESOURCES_KEYWORDS_FILE_NAME=keywords.robot
+# IMAGES_DIR_NAME=images
+# IMAGES_ERROR_DIR_NAME=images_error
+# TASKS_DIR_NAME=tasks
 MAX_WAIT_MANUTENCAO=5
 VERIFICAR_MODO=True
-#ARQUIVO_TEMPORARIO_ATIVO=False
-#NOME_ARQUIVO_TEMPORARIO=temp.txt
+# FAILSAFE_OFF=True
+# ARQUIVO_TEMPORARIO_ATIVO=False
+# NOME_ARQUIVO_TEMPORARIO=temp.txt
 ```
 
 - Run the following command on the terminal:

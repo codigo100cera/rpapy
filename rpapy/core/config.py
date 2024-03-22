@@ -17,6 +17,7 @@ IMAGES_ERROR_DIR_NAME={}
 TASKS_DIR_NAME={}
 MAX_WAIT_MANUTENCAO={}
 VERIFICAR_MODO={}
+FAILSAFE_OFF={}
 ARQUIVO_TEMPORARIO_ATIVO={}
 NOME_ARQUIVO_TEMPORARIO={}
 """
@@ -32,6 +33,7 @@ class Config:
     TASKS_DIR_NAME = os.environ.get('TASKS_DIR_NAME') or 'tasks'
     MAX_WAIT_MANUTENCAO = int(os.environ.get('MAX_WAIT_MANUTENCAO') or 5)
     VERIFICAR_MODO = bool(os.environ.get('VERIFICAR_MODO') or False)
+    FAILSAFE_OFF = bool(os.environ.get('FAILSAFE_OFF') or False)
     ARQUIVO_TEMPORARIO_ATIVO = bool(os.environ.get('ARQUIVO_TEMPORARIO_ATIVO') or False)
     NOME_ARQUIVO_TEMPORARIO = os.environ.get('NOME_ARQUIVO_TEMPORARIO') or 'temp.txt'
 
@@ -47,6 +49,7 @@ class Config:
             cls.TASKS_DIR_NAME,
             cls.MAX_WAIT_MANUTENCAO,
             cls.VERIFICAR_MODO,
+            cls.FAILSAFE_OFF,
             cls.ARQUIVO_TEMPORARIO_ATIVO,
             cls.NOME_ARQUIVO_TEMPORARIO,
         )
