@@ -278,11 +278,14 @@ class SnippingTool():
             self.root.destroy()
 
 
-def show_image_crop(im_crop: Image, timeout:int=0):
+def show_image_crop(im_crop: Image, timeout:int=0) -> cv2:
     img = cv2.cvtColor(np.array(im_crop), cv2.COLOR_BGR2RGB)
     cv2.imshow('Captured Image', img)
-    cv2.waitKey(timeout)
-    cv2.destroyAllWindows()
+    if timeout:
+        cv2.waitKey(timeout)
+        cv2.destroyAllWindows()
+    else:
+        return cv2
 
 
 def close_window_with_title(title: str):

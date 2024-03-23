@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- rpapy v1.0.8
+- rpapy v1.0.9
 """
 import sys
 from pathlib import Path
@@ -117,7 +117,7 @@ class AgentPy(QObject):
         self.backend = 'uia'
 
         self.hotkeys_thread = HotkeysThread(self)
-        self.hotkeys_thread.alterar_arquivo.connect(self._alterar_arquivo)
+        self.hotkeys_thread.alterar_arquivo.connect(self._change_file)
         self.hotkeys_thread.capiturar_imagem.connect(self._capiturar_imagem)
         self.hotkeys_thread.set_backend_uia.connect(self.set_backend_uia)
         self.hotkeys_thread.set_backend_win32.connect(self.set_backend_win32)
@@ -132,7 +132,7 @@ class AgentPy(QObject):
         self.mouse_thread.start()
         
         self._turn_on()
-        self._alterar_arquivo()
+        self._change_file()
     
     def _turn_on(self):
         HOTKEYS_ACTIONS = """\n***Turn on AgentPy***
@@ -178,7 +178,7 @@ class AgentPy(QObject):
     def _capiturar_imagem(self):
         capture_image_crop(self._nome_arquivo)
 
-    def _alterar_arquivo(self):        
+    def _change_file(self):        
         file_name = create_default_script_file(default_name=self._nome_arquivo)
         if file_name is None:
             pyautogui.alert(title='RPAPY', text='O agente foi cancelado.')
@@ -188,14 +188,14 @@ class AgentPy(QObject):
     
     def _update_image(self):
         from rpapy.core.config import Config
-        from rpapy.core.localizador import map_images
+        from rpapy.core.localizador import mapear_imagens
         
         default_name  = pyperclip.paste()
         image_name = pyautogui.prompt(text='Insirá o nome da imagem a ser atualizada', title='Atualização de imagem', default=default_name)    
         if image_name is None or image_name.strip() == '':
             return
 
-        image_name_path = map_images().get(image_name, {}).get('image')
+        image_name_path = mapear_imagens().get(image_name, {}).get('image')
 
         if image_name_path is not None:
             update_image(image_name_path)

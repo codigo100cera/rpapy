@@ -76,7 +76,7 @@ def update_image(image_name_path: str)-> bool:
 
     # Abre a imagem a ser trocada para ser exibida pelo visualizador de imagens
     im_crop = Image.open(image_name_path)
-    im_crop.show()
+    cv2 = show_image_crop(im_crop)
 
     # Apresenta aviso de confirmação com nome do path absoluto da imagem que será trocada,
     # Lança a exception caso a troca seja cancelada na caixa de confirmação
@@ -84,7 +84,8 @@ def update_image(image_name_path: str)-> bool:
         close_window_with_title('Fotos')
         raise ImageNotFoundError('A imagem "{image_name}" não foi encontrada.')
 
-    close_window_with_title('Fotos')
+    # Fecha janela do visualizador de imagem após confirmacao
+    cv2.destroyAllWindows()
     
     msg = 'Clique em IMG e selecione o retângulo do elemento de interface na tela'
     im_crop = record_image(msg, choices=['IMG', 'CANCEL'])      # Funcao para capiturar o recorte da imagem no screenshot da tela principar
@@ -106,9 +107,7 @@ def update_image(image_name_path: str)-> bool:
     im_crop.save(f'{images_dir_path}/{image_name}-{region}.png', 'PNG')
     
     if confirm_ok_cancel('Deseja visualizar a imagem adicionada?'):
-        # im_crop.show()
         # # Fecha janela do visualizador de imagem após confirmacao de troca
-        # close_window_with_title('Fotos')
         show_image_crop(im_crop, timeout=5000)
         time.sleep(.5)
         

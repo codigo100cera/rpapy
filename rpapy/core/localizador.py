@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+import warnings
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -8,12 +9,17 @@ import cv2
 import numpy as np
 import pyautogui
 from PIL import Image
-from pywinauto import Desktop
+
+with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        from pywinauto import Desktop
+
+from rpapy.core.loads import create_python_default_dirs
 
 from .config import Config
-from .snipps.snippingtools import (ImageNotDisappearError, ImageNotFoundError, close_window_with_title)
 from .snipps import update_image
-from rpapy.core.loads import create_python_default_dirs
+from .snipps.snippingtools import (ImageNotDisappearError, ImageNotFoundError,
+                                   close_window_with_title)
 
 MODO_MANUTENCAO = False
 if Config.VERIFICAR_MODO:
