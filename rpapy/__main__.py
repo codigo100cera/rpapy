@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- rpapy v1.0.9
+- rpapy v1.0.10
 """
 import sys
 from pathlib import Path
@@ -191,7 +191,8 @@ class AgentPy(QObject):
         from rpapy.core.localizador import mapear_imagens
         
         default_name  = pyperclip.paste()
-        image_name = pyautogui.prompt(text='Insirá o nome da imagem a ser atualizada', title='Atualização de imagem', default=default_name)    
+        image_name = pyautogui.prompt(text='Insirá o nome da imagem a ser atualizada', 
+                                      title='Atualização de imagem', default=default_name)    
         if image_name is None or image_name.strip() == '':
             return
 
@@ -200,7 +201,8 @@ class AgentPy(QObject):
         if image_name_path is not None:
             update_image(image_name_path)
         else:
-            pyautogui.alert(title='RPAPY',text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
+            pyautogui.alert(title='RPAPY',
+                            text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
 
 
 def main():
