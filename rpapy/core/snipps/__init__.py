@@ -82,9 +82,11 @@ def update_image(image_name_path: str)-> bool:
     # Lança a exception caso a troca seja cancelada na caixa de confirmação
     if not confirm_ok_cancel(f'A imagem "{image_name}" será alterada!'):
         close_window_with_title('Fotos')
-        raise ImageNotFoundError('A imagem "{image_name}" não foi encontrada.')
+        # close window visualization
+        cv2.destroyAllWindows()
+        return None
 
-    # Fecha janela do visualizador de imagem após confirmacao
+    # close window visualization
     cv2.destroyAllWindows()
     
     msg = 'Clique em IMG e selecione o retângulo do elemento de interface na tela'
