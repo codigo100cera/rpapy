@@ -53,7 +53,7 @@ def localizar_na_tela(image, *args, **kwargs):
 class LocalizadorImagem():
 
     def __init__(self):
-        self._screenshots: Dict[str, Dict[str, Tuple[int]]] = mapear_imagens()
+        self._screenshots: Dict[str, Tuple[int]] = mapear_imagens()
         self.wait_before = 0.0
         self.debug = False
         self._interval = 0.2
@@ -90,8 +90,17 @@ class LocalizadorImagem():
         if interval >= 0:
             self._interval = interval
 
-    def __call__(self, image_name: str, *, max_wait: float=None, confidence: float=None, wait_vanish=False,
-                interval: float=None, deslocar_x:int=0, deslocar_y:int=0) -> Tuple[int]:
+    def __call__(self,
+                 image_name: str, 
+                 *, 
+                 max_wait: float=None, 
+                 confidence: float=None, 
+                 wait_vanish=False,
+                 interval: float=None, 
+                 deslocar_x:int=0, 
+                 deslocar_y:int=0, 
+                 ignore_error: bool=False) -> Tuple[int]:
+        
         """Busca a imagem na tela até o tempo máximo definido por parâmetro, e retorna 
         a coordenada da imagem se encontrada, senão lança uma excessão personalizada ImageNotFoundError.
         Arguments:
@@ -146,7 +155,10 @@ class LocalizadorImagem():
             while coordenada is None:
                 try:
                     # recupera a imagem do mapa, passando o nome enviado por parâmetro
-                    image_region = self._screenshots[image_name]                
+                    image_region = {
+                        'image': self._screenshots[image_name]['image'],
+                        'region': self._screenshots[image_name]['region']
+                    }
                 except KeyError:
                     # Cria um arquivo com image_name no diretório images se não existir
                     im = Image.open(os.path.join(os.path.abspath(os.path.dirname(__file__)),'utils/imagens/IMAGEM_NAO_ENCONTRADA.png'))
@@ -174,9 +186,12 @@ class LocalizadorImagem():
                         atualizou = update_image(image_region.get('image'))
                         if atualizou:
                             self._screenshots = mapear_imagens()
-                            image_region = self._screenshots[image_name]
+                            image_region = {
+                                'image': self._screenshots[image_name]['image'],
+                                'region': self._screenshots[image_name]['region']
+                            }
                         start_time = time.time()
-                    else:
+                    elif not ignore_error:
                         # Efetua um print da tela no momento em que ocorreu o erro
                         image_not_found_error = pyautogui.screenshot()
                         # Salva o print da tela com o nome da imagem que não foi encontrada, incluindo data e hora
@@ -190,6 +205,12 @@ class LocalizadorImagem():
                 # Se o loop for encerrado na condicional do while, este bloco é executado.            
                 # Recupera a coordenada x,y do centro da imagem encontrada.
                 resultado = pyautogui.center(coordenada)
+
+                # Recupera as coordenadas da ancora para aplicar o deslocamento
+                anchor_coord = self._screenshots[image_name]['anchor_coord']
+                if anchor_coord is not None and deslocar_x + deslocar_y == 0:
+                    deslocar_x, deslocar_y = anchor_coord
+
                 # Retorna o resultado adionando os deslocamentos, se passados por parâmetro.
                 return resultado[0] + int(deslocar_x), resultado[-1] + int(deslocar_y)
         
@@ -204,7 +225,10 @@ class LocalizadorImagem():
             while coordenada is not None:
                 try:
                     # recupera a imagem do mapa, passando o nome enviado por parâmetro
-                    image_region = self._screenshots[image_name]                
+                    image_region = {
+                        'image': self._screenshots[image_name]['image'],
+                        'region': self._screenshots[image_name]['region']
+                    }                
                 except KeyError as e:
                     # Se modo manutenção igual True, cria imagem provisória e atualiza a imagem recem criada no mapa
                     if self._modo_manutencao:
@@ -215,12 +239,18 @@ class LocalizadorImagem():
                         # Atualiza o mapa com a imagem criada com o paramêtro image_name.
                         self._screenshots = mapear_imagens()
                         # recupera a imagem do mapa, passando o nome enviado por parâmetro
-                        image_region = self._screenshots[image_name]             
+                        image_region = {
+                            'image': self._screenshots[image_name]['image'],
+                            'region': self._screenshots[image_name]['region']
+                        }             
                     
                         atualizou = update_image(image_region.get('image'))
                         if atualizou:
                             self._screenshots = mapear_imagens()
-                            image_region = self._screenshots[image_name]
+                            image_region = {
+                                'image': self._screenshots[image_name]['image'],
+                                'region': self._screenshots[image_name]['region']
+                            }
                     else:
                         raise KeyError(e)     
                 else:
@@ -295,10 +325,25 @@ def mapear_imagens():
     # recupera do nome e a tupla que indica a região da imagem
     # adiciona os dados em um dict litera e adiona ao dict resultado pelo método default.
     for p in images_path:
-        p: Path = p     
-        nome, restante = p.name.split('-')
-        region_tuple = tuple(int(i) for i in restante.split('.')[0][1:-1].split(','))
-        resultado.setdefault(nome, {'image': p.as_posix(), 'region': region_tuple, })
+        p: Path = p
+
+        anchor_coord = None
+        nome, *_ = p.name.split('-')
+        
+        if '#' in p.name:
+            restante, anchor_coord = p.name.removeprefix(nome+'-').split('#')
+            region_tuple = tuple(int(i) for i in restante[1:-1].split(','))
+            anchor_coord = tuple(int(i) for i in anchor_coord.split('.')[0][1:-1].split(','))
+
+        else:
+            restante = p.name.removeprefix(nome+'-')
+            region_tuple = tuple(int(i) for i in restante.removesuffix('.png')[1:-1].split(','))
+        
+        resultado.setdefault(nome, {
+            'image': p.as_posix(), 
+            'region': region_tuple, 
+            'anchor_coord': anchor_coord,
+        })
     return resultado
 
 
@@ -348,3 +393,6 @@ def image_optmization(im: Image) -> Image:
     # print(phrase)
 
     return binimagem
+
+if '__main__' == __name__:
+    mapear_imagens()

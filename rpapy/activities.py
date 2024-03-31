@@ -52,21 +52,16 @@ def get_element_vision(image_name: str, *args,
     sleep(float(before))
     identifier_img = identifier_img or _identifier_img
     
-    coordinate = None
-    try:
-        coordinate = identifier_img(
-                image_name, 
-                max_wait=max_wait, 
-                confidence=confidence,
-                wait_vanish=wait_vanish,
-                interval=interval, 
-                deslocar_x=move_x, 
-                deslocar_y=move_y
-        )
-    except ImageNotFoundError as error:
-        if ignore_error:
-            return
-        raise ImageNotFoundError(str(error))
+    coordinate = identifier_img(
+        image_name, 
+        max_wait=max_wait, 
+        confidence=confidence,
+        wait_vanish=wait_vanish,
+        interval=interval, 
+        deslocar_x=move_x, 
+        deslocar_y=move_y,
+        ignore_error=ignore_error
+    )
     
     if attr_name is None:
         return coordinate

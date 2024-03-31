@@ -12,6 +12,7 @@ import pyautogui
 from rpapy.core.utils.messages import confirm_ok_cancel, message_to_set_timeout
 
 coordinates = None
+anchor = None
 
 class ScreenshotAreaError(Exception):
     pass
@@ -61,7 +62,7 @@ def record_image(msg: str, choices: List[str]=None):
     # Prompt to instruct the user
     text = sg.Text(msg, background_color="#2196F3", text_color="white")
 
-    choices = choices or ['IMG', 'IMG_OCR', 'OCR', 'CANCEL']
+    choices = choices or ['IMG', 'IMG_ANCHOR', 'IMG_OCR', 'OCR', 'CANCEL']
 
     buttons = [
         sg.Button(choice, button_color=("white", "#0069C0")) for choice in choices
@@ -94,11 +95,16 @@ def record_image(msg: str, choices: List[str]=None):
 
     screenshot = capture_screen()
 
-    # Present the user with a selection window
-    target = select_rectangle_on_screen(screenshot)
-      
+    target = anchor = None
+    if 'ANCHOR' in choice:
+        # Present the user with a selection window
+        target, anchor_coord = select_rectangle_on_screen(screenshot, is_anchor=True)
+    else:            
+        # Present the user with a selection window
+        target, anchor_coord = select_rectangle_on_screen(screenshot)
+        
     im_crop = screenshot.crop(target)
-    return im_crop
+    return im_crop, anchor_coord
 
 
 def record_region(msg_timeout: str=None):
@@ -137,7 +143,12 @@ def record_region(msg_timeout: str=None):
         if msg_timeout:
             message_to_set_timeout(msg_timeout)
         screenshot = capture_screen()
-        region = get_screenshot_region(*select_rectangle_on_screen(screenshot))
+        retangle_on_screen, anchor_coord = select_rectangle_on_screen(screenshot)
+
+        if retangle_on_screen is None:
+            return
+        
+        region = get_screenshot_region(*retangle_on_screen)
 
     return region
 
@@ -165,23 +176,27 @@ def capture_screen():
     return img
 
 
-def select_rectangle_on_screen(screenshot, info=''):
+def select_rectangle_on_screen(screenshot, info='', is_anchor=False):
     """
     Presents the user with a window which allows him/her to select
     a rectangle on the screen and returns the coordinates in the carthesian
     coordinate system
     """
     global coordinates
+    global anchor
 
     try:
-        SnippingTool(screenshot, info=info)
-        return coordinates
+        if is_anchor:
+            SnippingTool(screenshot, info=info, is_anchor=is_anchor)
+        else:
+            SnippingTool(screenshot, info=info)
     except KeyboardInterrupt:
         return
 
+    return coordinates, anchor
 
 class SnippingTool():
-    def __init__(self, image, info=''):
+    def __init__(self, image, info='', is_anchor=False):
         """
         Starts a full screen snipping tool for selecting coordinates
         """
@@ -191,6 +206,7 @@ class SnippingTool():
         from PIL import ImageTk
 
         self.root = tk.Tk()
+        self.is_anchor = is_anchor
 
         self.root.bind("<Escape>", self._quit)
 
@@ -207,8 +223,11 @@ class SnippingTool():
         # Keep reference of some things
         self.x = self.y = 0
         self.rect = None
+        self.line = None
         self.start_x = None
         self.start_y = None
+        self.deloc_x = None
+        self.deloc_y = None
 
         # Create the canvas
         self.canvas = tk.Canvas(
@@ -253,14 +272,39 @@ class SnippingTool():
                 self.x, self.y, 1, 1, outline="#ff0000",
                 fill="#1B97F3", stipple="gray12")
 
-    def on_move_press(self, event):
+    def on_move_press(self, event):        
         # Update coordinates
         self.end_x, self.end_y = (event.x, event.y)
 
         # expand rectangle as you drag the mouse
         self.canvas.coords(self.rect, self.start_x,
                            self.start_y, self.end_x, self.end_y)
+    
+    def on_move_anchor(self, event):
+        # Update coordinates
+        self.click_x, self.click_y = event.x, event.y        
+        
+        # Desenhe uma linha reta do centro até a posição atual do mouse
+        self.canvas.coords(self.line, self.centro_x, self.centro_y, self.click_x, self.click_y)
 
+        
+    def on_button_press_anchor(self, event):
+        # Calcule a distância até o centro do retângulo
+        # Calcule a posição relativa ao centro do retângulo
+        self.deloc_x = self.click_x - self.centro_x
+        self.deloc_y = self.click_y - self.centro_y
+
+    def on_button_release_anchor(self, event):
+        # Update global variable
+        global anchor
+
+        if hasattr(self, 'deloc_x'):
+            anchor = (self.deloc_x, self.deloc_y) 
+
+            # Close the window
+            self.root.quit()
+            self.root.destroy()
+    
     def on_button_release(self, event):
         # Update global variable
         global coordinates
@@ -273,9 +317,34 @@ class SnippingTool():
                 max(self.start_y, self.end_y)
             )
 
-            # Close the window
-            self.root.quit()
-            self.root.destroy()
+            if self.is_anchor:
+
+                # Calcular o centro do retângulo
+                self.centro_x = (self.start_x + self.end_x) // 2
+                self.centro_y = (self.start_y + self.end_y) // 2
+
+                # Disconnect the event handlers
+                self.canvas.unbind_all(["<ButtonPress-1>", "<B1-Motion>", "<ButtonRelease-1>"])
+
+                # Connect the new event handlers to anchor coord
+                self.canvas.bind("<ButtonPress-1>", self.on_button_press_anchor)
+                self.canvas.bind("<Motion>", self.on_move_anchor)
+                self.canvas.bind("<ButtonRelease-1>", self.on_button_release_anchor)
+                
+                if not self.line:
+                    # Update coordinates
+                    start_x = event.x
+                    start_y = event.y
+                    # Criar uma linha de feedback (inicialmente invisível)
+                    self.line = self.canvas.create_line(self.line, self.centro_x, 
+                                                        self.centro_y,  start_x, start_y, 
+                                                        fill='red', width=2)
+
+            else:
+                # Close the window
+                self.root.quit()
+                self.root.destroy()
+
 
 
 def show_image_crop(im_crop: Image, timeout:int=0) -> cv2:

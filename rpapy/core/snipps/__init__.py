@@ -23,9 +23,9 @@ def capture_image_crop(file_name:str=None)-> Optional[bool]:
     resources_path = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME)
     images_dir_path = resources_path / Config.IMAGES_DIR_NAME
     
-    msg = 'Clique em IMG, IMG_OCR e selecione o retângulo do elemento de interface na tela ou OCR.'
+    msg = 'Clique em IMG, IMG_ANCHOR, IMG_OCR e selecione o retângulo do elemento de interface na tela ou OCR.'
     snippet_type = None
-    im_crop = record_image(msg)      # Funcao para capiturar o recorte da imagem no screenshot da tela principar
+    im_crop, anchor_coord = record_image(msg)      # Funcao para capiturar o recorte da imagem no screenshot da tela principar
     if im_crop == 'CANCEL':
         return    
         
@@ -45,7 +45,8 @@ def capture_image_crop(file_name:str=None)-> Optional[bool]:
     if 'OCR' != snippet_type:
         remove_duplicate_images(image_name, dir_name_imgs=images_dir_path)
 
-        im_crop.save(f'{images_dir_path}/{image_name}-{region}.png', 'PNG')
+        file_name = create_file_name(images_dir_path, anchor_coord, region, image_name)
+        im_crop.save(file_name, 'PNG')
         
         if confirm_ok_cancel('Deseja visualizar a imagem adicionada?'):
             show_image_crop(im_crop, timeout=5000)
@@ -90,7 +91,7 @@ def update_image(image_name_path: str)-> bool:
     cv2.destroyAllWindows()
     
     msg = 'Clique em IMG e selecione o retângulo do elemento de interface na tela'
-    im_crop = record_image(msg, choices=['IMG', 'CANCEL'])      # Funcao para capiturar o recorte da imagem no screenshot da tela principar
+    im_crop, anchor_coord = record_image(msg, choices=['IMG', 'IMG_ANCHOR', 'CANCEL'])      # Funcao para capiturar o recorte da imagem no screenshot da tela principar
     if im_crop == 'CANCEL':
         return False
         
@@ -106,7 +107,8 @@ def update_image(image_name_path: str)-> bool:
 
     remove_duplicate_images(image_name, dir_name_imgs=images_dir_path)
 
-    im_crop.save(f'{images_dir_path}/{image_name}-{region}.png', 'PNG')
+    file_name = create_file_name(images_dir_path, anchor_coord, region, image_name)
+    im_crop.save(file_name, 'PNG')
     
     if confirm_ok_cancel('Deseja visualizar a imagem adicionada?'):
         # # Fecha janela do visualizador de imagem após confirmacao de troca
@@ -114,3 +116,9 @@ def update_image(image_name_path: str)-> bool:
         time.sleep(.5)
         
     return True
+
+
+def create_file_name(images_dir_path, anchor_coord, region, image_name):
+    file_name = f'{images_dir_path}/{image_name}-{region}#{anchor_coord}.png'
+    file_name = file_name.replace('#None', '')
+    return file_name
