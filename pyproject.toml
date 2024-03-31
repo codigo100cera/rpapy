@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rpapy"
-version = "1.0.10"
+version = "1.1.0"
 description = "RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others."
 authors = ["Codigo Sem Cera <codigo100cera@gmail.com>"]
 license = "MIT"

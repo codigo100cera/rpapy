@@ -49,7 +49,7 @@ def capture_image_crop(file_name:str=None)-> Optional[bool]:
         im_crop.save(file_name, 'PNG')
         
         if confirm_ok_cancel('Deseja visualizar a imagem adicionada?'):
-            show_image_crop(im_crop, timeout=5000)
+            show_image_crop(im_crop, timeout=3000)
             
     return True
 
@@ -112,7 +112,7 @@ def update_image(image_name_path: str)-> bool:
     
     if confirm_ok_cancel('Deseja visualizar a imagem adicionada?'):
         # # Fecha janela do visualizador de imagem após confirmacao de troca
-        show_image_crop(im_crop, timeout=5000)
+        show_image_crop(im_crop, timeout=3000)
         time.sleep(.5)
         
     return True

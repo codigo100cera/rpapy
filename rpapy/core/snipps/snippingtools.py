@@ -86,9 +86,9 @@ def record_image(msg: str, choices: List[str]=None):
     del(window2)
 
     if choice == 'CANCEL':
-        return choice
+        return choice, None
     elif 'IMG' not in choice:
-        return 'OCR'    
+        return 'OCR', None  
 
     msg = 'Clique em TIMEOUT e selecione o objeto, se deseja gravar mudanças de aspecto da imagem a ser salva.'
     message_to_set_timeout(msg)
@@ -258,7 +258,7 @@ class SnippingTool():
 
         self.root.mainloop()
 
-    def _quit(self):
+    def _quit(self, event=None):
         self.root.destroy()
 
     def on_button_press(self, event):
