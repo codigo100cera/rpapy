@@ -182,3 +182,4 @@ log/
 resources/
 rpapy.egg-info
 tasks/
+main.py

@@ -1,7 +1,7 @@
 """Normaliza o texto para execucao de teclas especiais no pyautogui no mesmo padrão do pywinauto
 """
 
-def prepare_text_to_pyautogui(text):
+def prepare_text_for_pyautogui(text):
     result = []
     keys_press = ''
     flag_key = False
@@ -34,4 +34,4 @@ def prepare_text_to_pyautogui(text):
 
 
 if __name__ == "__main__":
-    print(prepare_text_to_pyautogui(r'{ESC 5}ocorrência{TAB 3}trabalhador{ENTER 2}'))
+    print(prepare_text_for_pyautogui(r'{ESC 5}ocorrência{TAB 3}trabalhador{ENTER 2}'))

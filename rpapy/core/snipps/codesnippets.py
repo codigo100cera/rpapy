@@ -4,10 +4,12 @@ from typing import Dict, List
 
 import pyautogui
 import pyperclip
+
 from rpapy.core.config import Config
+from rpapy.core.snipps import templates
+from rpapy.core.snipps.loads import (create_default_script_file,
+                                     create_robot_default_dirs)
 from rpapy.core.snipps.snippingtools import record_region
-from rpapy.core.loads import create_default_script_file, create_robot_default_dirs
-from rpapy.core.utils import templates
 
 
 class ParamNotFoundError(Exception):
@@ -127,8 +129,8 @@ def writing_code_snippet(
     create_default_script_file(file_name=nome_arquivo)
         
     # Decide qual arquivo será aberto para escrita do snippet de código
-    if Config.ARQUIVO_TEMPORARIO_ATIVO:
-        path_file = Path(Config.BASE_DIR, Config.NOME_ARQUIVO_TEMPORARIO)
+    if Config.ACTIVE_TEMPORARY_ARCHIVE:
+        path_file = Path(Config.BASE_DIR, Config.TEMPORALY_FILE_NAME)
         if not path_file.exists():
             path_file.touch()
     elif extensao == 'robot':

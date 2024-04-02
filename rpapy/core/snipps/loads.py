@@ -1,12 +1,48 @@
 import contextlib
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
+from typing import Dict, Tuple
 
 import pyautogui
 
-from .config import Config
-from .utils import templates
+from rpapy.core.utils.messages import confirm_ok_cancel, prompt
+
+from ..config import Config
+
+
+def create_python_default_dirs():
+    path_dir_resources = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME)
+    with contextlib.suppress(FileExistsError):
+        path_dir_resources.mkdir()
+
+    path_dir_images = Path(path_dir_resources, Config.IMAGES_DIR_NAME)
+    with contextlib.suppress(FileExistsError):
+        path_dir_images.mkdir()
+
+    error_images_dir_path = path_dir_resources / Config.IMAGES_ERROR_DIR_NAME
+    with contextlib.suppress(FileExistsError):
+        error_images_dir_path.mkdir()
+
+
+def replace_file_confirm(path_file: Path, content: str = None,* , origin_file: Path = None):
+    if path_file.exists():
+        text = f'O arquivo "{path_file.name}" será subistuido, para confirmar clique em OK.'
+        opcao = confirm_ok_cancel(text=text, title='RPA-PY')        
+        if opcao:
+            if '.py' in path_file.name:
+                path_file.write_text(content)
+            elif '.svg' in path_file.name:
+                shutil.copy(origin_file, path_file)
+            else:
+                path_file.write_text(content, encoding='utf-8')            
+    else:
+        if '.py' in path_file.name:
+                path_file.write_text(content)
+        elif '.svg' in path_file.name:
+            shutil.copy(origin_file, path_file)
+        else:
+            path_file.write_text(content, encoding='utf-8')
 
 
 def load_robot_example():
@@ -14,8 +50,8 @@ def load_robot_example():
     from rpapy.core.utils.example import paint_robot
 
     text = f'***ATENÇÃO***\n\nAlguns arquivos poderão ser substituidos!\nVocê deseja carregar a implementação de exemplo do robo-rpapy?'
-    opcao = pyautogui.confirm(text=text, title='RPA-PY', buttons=['OK','CANCEL'])        
-    if opcao is None or opcao == 'CANCEL':
+    opcao = confirm_ok_cancel(text=text, title='RPA-PY')        
+    if not opcao:
         return
 
     pyautogui.alert(title='ATENÇÃO!', text='Após terminar de carregar os arquivos, execute\no seguinte comando no terminal:\n\nrobot -d log tasks')
@@ -43,28 +79,7 @@ def load_robot_example():
     replace_file_confirm(svg_template_path, origin_file=origin_file_svg)
 
 
-def replace_file_confirm(path_file: Path, content: str = None,* , origin_file: Path = None):
-    if path_file.exists():
-        text = f'O arquivo "{path_file.name}" será subistuido, para confirmar clique em OK.'
-        opcao = pyautogui.confirm(text=text, title='RPA-PY', buttons=['OK','CANCEL'])        
-        if opcao is not None or opcao != 'CANCEL':
-            if '.py' in path_file.name:
-                path_file.write_text(content)
-            elif '.svg' in path_file.name:
-                shutil.copy(origin_file, path_file)
-            else:
-                path_file.write_text(content, encoding='utf-8')            
-    else:
-        if '.py' in path_file.name:
-                path_file.write_text(content)
-        elif '.svg' in path_file.name:
-            shutil.copy(origin_file, path_file)
-        else:
-            path_file.write_text(content, encoding='utf-8')
-
-
 def create_robot_default_dirs():
-
     path_dir_task = Path(Config.BASE_DIR, Config.TASKS_DIR_NAME)
     with contextlib.suppress(FileExistsError):
         path_dir_task.mkdir()
@@ -72,33 +87,19 @@ def create_robot_default_dirs():
     create_python_default_dirs()  
 
 
-def create_python_default_dirs():
-
-    path_dir_resources = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME)
-    with contextlib.suppress(FileExistsError):
-        path_dir_resources.mkdir()
-
-    path_dir_images = Path(path_dir_resources, Config.IMAGES_DIR_NAME)
-    with contextlib.suppress(FileExistsError):
-        path_dir_images.mkdir()
-
-    error_images_dir_path = path_dir_resources / Config.IMAGES_ERROR_DIR_NAME
-    with contextlib.suppress(FileExistsError):
-        error_images_dir_path.mkdir()
-
-
-def create_example_default_dirs():
-    
+def create_example_default_dirs():    
     create_python_default_dirs()
-    path_desenhos_dir = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME, 'desenhos')
+    draw_dir_path = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME, 'desenhos')
     with contextlib.suppress(FileExistsError):
-        path_desenhos_dir.mkdir()
+        draw_dir_path.mkdir()
 
 
-def create_default_script_file(*, file_name:str=None, default_name:str='main.robot'):    
+def create_default_script_file(*, file_name:str=None, default_name:str='main.robot'):
+    from . import templates
+
     if file_name is None:
-        file_name = pyautogui.prompt(text='Insirá o nome do arquivo com extensão .robot ou .py', title='Alteração de Arquivo', default=default_name)    
-        if file_name is None:
+        file_name = prompt(text='Insirá o nome do arquivo com extensão .robot ou .py', title='Alteração de Arquivo', default=default_name)
+        if file_name is False:
             return
 
     file_name = default_name if file_name is None or file_name.strip() == '' else file_name

@@ -30,6 +30,7 @@ mouse = "^0.7.1"
 numpy = "^1.26.4"
 opencv-python = "^4.9.0.80"
 pysimplegui = "<5.0,>=4.0"
+keyring = "^25.1.0"
 
 [tool.poetry.scripts]
 rpapy = 'rpapy.__main__:main'

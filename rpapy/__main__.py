@@ -15,20 +15,21 @@ from PySide6.QtWidgets import QApplication
 with patch("ctypes.windll.user32.SetProcessDPIAware", autospec=True):
     import pyautogui  # noqa # pylint:disable=unused-import
 
-from rpapy.core.loads import (create_default_script_file,
-                              create_robot_default_dirs, load_robot_example)
+from rpapy.core.config import Config
 from rpapy.core.snipps import capture_image_crop, update_image
+from rpapy.core.snipps.loads import (create_default_script_file,
+                                     load_robot_example)
 from rpapy.core.utils import draw_outline
-from rpapy.core.utils.messages import message_to_set_timeout
+from rpapy.core.utils.messages import message_to_set_timeout, select_item_list
 
 
-def get_position_element(x, y):
+def get_element_position(x, y):
     print('{0} at {1}'.format('Pressed', (x, y)))
     pyperclip.copy('{0}, {1}'.format(x, y))
 
 
 class MouseThread(QThread):
-    controle_key = keyboard.Controller()
+    key_controll = keyboard.Controller()
 
     def run(self):
         
@@ -39,7 +40,7 @@ class MouseThread(QThread):
             
         def on_click(x, y, button, pressed):
             if pressed:        
-                # get_position_element(x, y)
+                # get_element_position(x, y)
                 pass
 
         # ...or, in a non-blocking fashion:
@@ -50,8 +51,8 @@ class MouseThread(QThread):
 
 
 class HotkeysThread(QThread):
-    capiturar_imagem = Signal(object)
-    alterar_arquivo = Signal(bool)
+    capture_image = Signal(object)
+    change_file = Signal(bool)
     set_backend_uia = Signal(object)
     set_backend_win32 = Signal(object)
     show_config = Signal()
@@ -62,11 +63,11 @@ class HotkeysThread(QThread):
 
     def run(self):
         flag_backend = True
-        def capiturar_imagem():
-            self.capiturar_imagem.emit('Alterar imagem')
+        def capture_image():
+            self.capture_image.emit('Change image')
 
-        def alterar_arquivo():
-            self.alterar_arquivo.emit(True)
+        def change_file():
+            self.change_file.emit(True)
         
         def set_backend_uia_win32():
             nonlocal flag_backend
@@ -92,8 +93,8 @@ class HotkeysThread(QThread):
             h.stop()
                 
         with keyboard.GlobalHotKeys({
-                '<ctrl>+<alt>+p': capiturar_imagem,
-                '<ctrl>+<alt>+r': alterar_arquivo,
+                '<ctrl>+<alt>+p': capture_image,
+                '<ctrl>+<alt>+r': change_file,
                 '<ctrl>+<alt>+b': set_backend_uia_win32,
                 '<ctrl>+<alt>+u': update_image,
                 '<ctrl>+i':       inspect_element,
@@ -109,16 +110,15 @@ class AgentPy(QObject):
     
     def __init__(self, config=None):
         super(AgentPy, self).__init__()
-        from rpapy.core.config import Config
+        
+        self.config: Config = Config if config is None else config
 
-        self._config: Config = Config if config is None else config
-
-        self._nome_arquivo = 'main.robot'
+        self._file_name = 'main.robot'
         self.backend = 'uia'
 
         self.hotkeys_thread = HotkeysThread(self)
-        self.hotkeys_thread.alterar_arquivo.connect(self._change_file)
-        self.hotkeys_thread.capiturar_imagem.connect(self._capiturar_imagem)
+        self.hotkeys_thread.change_file.connect(self._change_file)
+        self.hotkeys_thread.capture_image.connect(self._capture_imagem)
         self.hotkeys_thread.set_backend_uia.connect(self.set_backend_uia)
         self.hotkeys_thread.set_backend_win32.connect(self.set_backend_win32)
         self.hotkeys_thread.inspect_element.connect(self._backend_inspect)
@@ -157,52 +157,57 @@ class AgentPy(QObject):
         exit(0)
 
     def _show_config(self):
-        message_to_set_timeout(self._config.get_config(), timeout=False)
+        message_to_set_timeout(self.config.get_config(), timeout=False)
 
     def _upload_example(self):
         load_robot_example()
 
     def set_backend_uia(self, backend: str):
         self.backend = backend
-        print('>>>> Backend alterado para "UIA".')             
+        print('>>>> Backend changed to "UIA".')             
 
     def set_backend_win32(self, backend: str):
         self.backend = backend        
-        print('>>>> Backend alterado para "WIN32".')             
+        print('>>>> Backend changed to "WIN32".')             
     
     def _backend_inspect(self):
         x, y = pyautogui.position()
-        get_position_element(x, y)
+        get_element_position(x, y)
         draw_outline(x, y, backend=self.backend)
 
-    def _capiturar_imagem(self):
-        capture_image_crop(self._nome_arquivo)
+    def _capture_imagem(self):
+        capture_image_crop(self._file_name)
 
     def _change_file(self):        
-        file_name = create_default_script_file(default_name=self._nome_arquivo)
+        file_name = create_default_script_file(default_name=self._file_name)
         if file_name is None:
-            pyautogui.alert(title='RPAPY', text='O agente foi cancelado.')
+            pyautogui.alert(title='RPAPY', text='O agente será desligado.')
             pyautogui.hotkey('ctrl', 'win', 'x')
             return
-        self._nome_arquivo = file_name
+        self._file_name = file_name
     
     def _update_image(self):
-        from rpapy.core.config import Config
-        from rpapy.core.localizador import mapear_imagens
+        from rpapy.core.image_mapper import map_images
+
+        map_images_regions_anchors = map_images()        
+        image_name_list = list(map_images_regions_anchors)
+
+        image_name = select_item_list(text='Selecione o nome da imagem a ser atualizada',
+                                      title='Update Image',
+                                      item_type_name='Image',
+                                      item_list=image_name_list,
+                                      index=0)
         
-        default_name  = pyperclip.paste()
-        image_name = pyautogui.prompt(text='Insirá o nome da imagem a ser atualizada', 
-                                      title='Atualização de imagem', default=default_name)    
         if image_name is None or image_name.strip() == '':
             return
 
-        image_name_path = mapear_imagens().get(image_name, {}).get('image')
+        image_name_path = map_images_regions_anchors.get(image_name, {}).get('image')
 
         if image_name_path is not None:
             update_image(image_name_path)
         else:
             pyautogui.alert(title='RPAPY',
-                            text=f'A imagem "{image_name}" não foi encontrada no diretório {Config.IMAGES_DIR_NAME}.')
+                            text=f'A imagem "{image_name}" não foi encontrada no diretório {self.config.IMAGES_DIR_NAME}.')
 
 
 def main():

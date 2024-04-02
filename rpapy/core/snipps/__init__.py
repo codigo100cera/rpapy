@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Optional
 
 from PIL import Image
+
 from rpapy.core.config import Config
-from rpapy.core.loads import create_python_default_dirs
 from rpapy.core.snipps.codesnippets import add_new_activity
-from rpapy.core.snipps.snippingtools import (ImageNotFoundError,
-                                             close_window_with_title,
+from rpapy.core.snipps.loads import create_python_default_dirs
+from rpapy.core.snipps.snippingtools import (close_window_with_title,
                                              record_image, record_region,
                                              remove_duplicate_images,
                                              show_image_crop)
@@ -20,8 +20,7 @@ def capture_image_crop(file_name:str=None)-> Optional[bool]:
         raise Exception('O nome do arquivo deve ter a extensão .py ou .robot')
 
     create_python_default_dirs()
-    resources_path = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME)
-    images_dir_path = resources_path / Config.IMAGES_DIR_NAME
+    images_dir_path = Config.IMAGES_DIR_PATH
     
     msg = 'Clique em IMG, IMG_ANCHOR, IMG_OCR e selecione o retângulo do elemento de interface na tela ou OCR.'
     snippet_type = None
@@ -69,8 +68,8 @@ def update_image(image_name_path: str)-> bool:
     """
     
     create_python_default_dirs()
-    resources_path = Path(Config.BASE_DIR, Config.RESOURCES_DIR_NAME)
-    images_dir_path = resources_path / Config.IMAGES_DIR_NAME
+    
+    images_dir_path = Config.IMAGES_DIR_PATH
 
     # Recupera apenas o nome da imagem sem dados da região para utilizar na capitura da nova imagem
     image_name = image_name_path.split('/')[-1].split('-')[0]

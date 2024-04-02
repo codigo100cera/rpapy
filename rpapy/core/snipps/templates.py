@@ -9,11 +9,11 @@ VARIAVEIS_AMBIENTE = """###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
 #IMAGES_DIR_NAME=images
 #IMAGES_ERROR_DIR_NAME=images_error
 #TASKS_DIR_NAME=tasks
-#MAX_WAIT_MANUTENCAO=3
-#VERIFICAR_MODO=True
+#MAX_WAIT_MAINTENANCE=3
+#CHECK_MODE=True
 #FAILSAFE_OFF=True
-#ARQUIVO_TEMPORARIO_ATIVO=se
-#NOME_ARQUIVO_TEMPORARIO=temp.Faltxt
+#ACTIVE_TEMPORARY_ARCHIVE=se
+#TEMPORALY_FILE_NAME=temp.Faltxt
 #ONLY_IMAGE_PATH=False
 
 """
@@ -28,19 +28,13 @@ from pathlib import Path
 import pyautogui
 import pytesseract as ocr
 from pywinauto import Desktop
-from rpapy.activities import (click_coord, click_vision, contextlib, double_click_coord, 
-                              double_click_vision, drag_to_vision, drag_vision, get_element_coord, 
-                              get_element_vision, get_path_by_image_name, get_text_ocr_region, 
-                              get_text_ocr_vision, get_windows_title, max_wait_attr, open_executable, 
-                              prepare_text_to_pyautogui, registrar_credencial, toast_process_start_notifier, 
-                              triple_click_coord, triple_click_vision, wait_element_vision, write_text_coord, 
-                              write_text_vision)
-from rpapy.core.localizador import (ImageNotFoundError, LocalizadorImagem,
+from rpapy.activities import *
+from rpapy.core.localizador import (ImageNotFoundError, LocatorImage,
                                     image_optmization, max_wait_attr)
 
 #######################DEFINE#######################
 toast_process_start_notifier()
-get_coordenadas = LocalizadorImagem()
+get_coordenadas = LocatorImage()
 #######################DEFINE#######################
 
 

@@ -16,7 +16,7 @@ _"Creating __automations__ for __GUI__ has never been more __fun__ than now."_
 
 The easiest way to install RPAPY is by using __pip install__
 
-- Download and install [Python 3.7](https://www.python.org)
+- Download and install [Python >=3.10, <3.13 ](https://www.python.org)
 
 - Install the latest version RPAPY on your machine:
 ```
@@ -28,8 +28,8 @@ However, it is advisable to use a virtual environment for an isolated installati
 pip install virtualenv
 mkdir <your-project-name>
 cd <your-project-name>
-virtualenv create rpapy-env
-activate rpapy-ev
+virtualenv create rpapy-venv
+activate rpapy-venv
 pip install rpapy
 ```
 

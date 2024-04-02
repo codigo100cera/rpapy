@@ -1,21 +1,20 @@
 import contextlib
 from typing import Tuple
 
-from pywinauto import Desktop
-
-from rpapy.core.localizador import LocalizadorImagem, max_wait_attr
-from rpapy.core.prepare_text import prepare_text_to_pyautogui
-from rpapy.core.snipps.snippingtools import ImageNotFoundError
+from rpapy.core.locator import LocatorImage, max_wait_attr
+from rpapy.core.prepare_text import prepare_text_for_pyautogui
 
 ###########################################################
-_identifier_img = LocalizadorImagem()
+_identifier_img = LocatorImage()
 ###########################################################
+
 
 def toast_process_start_notifier():
     print('\n>>>> Robo.py iniciando processo...')
 
 
-def _get_ui_element(x: int, y: int,*,attr_name: str, backend: Desktop, wait_attr: float):
+def _get_ui_element(x: int, y: int,*,attr_name: str, backend: 'Desktop', wait_attr: float):
+    from pywinauto import Desktop
     UI_element = Desktop(backend=backend).from_point(x, y)
     max_wait_attr(UI_element, attr_name=attr_name, max_wait=wait_attr)
     return UI_element
@@ -27,8 +26,8 @@ def wait_element_vision(*args, **kwargs):
 
 def get_element_vision(image_name: str, *args,        
         attr_name: str=None,
-        identifier_img: LocalizadorImagem=None,
-        backend: str=None,             # As opções são: 'uia' ou 'win32'
+        identifier_img: LocatorImage=None,
+        backend: str=None,             # Options: 'uia' ou 'win32'
         before: float=0.0,
         after: float=0.0,
         max_wait: float=None, 
@@ -110,7 +109,7 @@ def get_element_vision(image_name: str, *args,
 
 def write_text_vision(image_name: str,*,
         text: str,
-        identifier_img: LocalizadorImagem=None,
+        identifier_img: LocatorImage=None,
         backend: str=None,             # As opções são: 'uia' ou 'win32'
         max_wait: float=None, 
         wait_vanish: bool=False,
@@ -127,7 +126,7 @@ def write_text_vision(image_name: str,*,
 
     attr_name = 'type_keys' if backend is not None else 'press'
     if backend is None:
-        text = prepare_text_to_pyautogui(text)
+        text = prepare_text_for_pyautogui(text)
 
     execute = True
     
@@ -138,7 +137,7 @@ def write_text_vision(image_name: str,*,
 
 
 def click_vision(image_name: str,*,
-        identifier_img: LocalizadorImagem=None,
+        identifier_img: LocatorImage=None,
         backend: str=None,             # As opções são: 'uia' ou 'win32'
         button: str='left',
         max_wait: float=None, 
@@ -163,7 +162,7 @@ def click_vision(image_name: str,*,
 
 
 def double_click_vision(image_name: str,*,
-        identifier_img: LocalizadorImagem=None,
+        identifier_img: LocatorImage=None,
         button: str='left',
         delay: float=0.0,
         before: float=0.0,
@@ -189,7 +188,7 @@ def double_click_vision(image_name: str,*,
 
 
 def triple_click_vision(image_name: str,*,
-        identifier_img: LocalizadorImagem=None,
+        identifier_img: LocatorImage=None,
         button: str='left',
         delay: float=0.1,
         before: float=0.0,
@@ -277,7 +276,7 @@ def write_text_coord(x: int, y: int,*,
 
     attr_name = 'type_keys' if backend is not None else 'press'
     if backend is None:
-        text = prepare_text_to_pyautogui(text)    
+        text = prepare_text_for_pyautogui(text)    
 
     return get_element_coord(x, y, text, attr_name=attr_name, backend=backend, before=before, after=after, delay=delay, wait_attr=wait_attr)
     
@@ -321,7 +320,7 @@ def triple_click_coord(x: int, y: int,
     return get_element_coord(x, y, button=button, attr_name=attr_name, backend=backend, before=before, after=after, delay=delay, wait_attr=wait_attr)
 
 
-def get_text_ocr_vision(image_name, region:Tuple[int], *args, identifier_img: LocalizadorImagem=None, lang: str='por', **kwargs) -> str:
+def get_text_ocr_vision(image_name, region:Tuple[int], *args, identifier_img: LocatorImage=None, lang: str='por', **kwargs) -> str:
     import pytesseract as ocr
     from pyautogui import screenshot
 
@@ -443,5 +442,5 @@ def get_windows_title(window_title: str):
 
 
 def get_path_by_image_name(image_name: str)-> str:
-    from rpapy.core.localizador import get_absolute_path_by_image_name
+    from rpapy.core.locator import get_absolute_path_by_image_name
     return get_absolute_path_by_image_name(image_name)
