@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- rpapy v1.1.2
+- rpapy v1.1.3
 """
 import sys
 from pathlib import Path
