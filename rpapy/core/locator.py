@@ -2,7 +2,6 @@ import datetime
 import os
 import time
 import warnings
-from pathlib import Path
 from typing import Dict, Tuple
 
 import cv2
@@ -10,7 +9,7 @@ import numpy as np
 import pyautogui
 from PIL import Image
 
-from rpapy.core.utils.messages import confirm_ok_cancel, confirm_yes_no_cancel
+from rpapy.core.utils.messages import confirm_yes_no_cancel
 
 with warnings.catch_warnings():
         warnings.simplefilter("ignore")

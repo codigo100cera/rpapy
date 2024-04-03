@@ -7,13 +7,13 @@ VARIAVEIS_AMBIENTE = """###VARIAVEIS DE AMBIENTE PYTHON-DOTENV
 #RESOURCES_DIR_NAME=resources
 #RESOURCES_KEYWORDS_FILE_NAME=keywords.robot
 #IMAGES_DIR_NAME=images
-#IMAGES_ERROR_DIR_NAME=images_error
+#IMAGES_ERROR_DIR_NAME=error_images
 #TASKS_DIR_NAME=tasks
 #MAX_WAIT_MAINTENANCE=3
 #CHECK_MODE=True
 #FAILSAFE_OFF=True
 #ACTIVE_TEMPORARY_ARCHIVE=se
-#TEMPORALY_FILE_NAME=temp.Faltxt
+#TEMPORALY_FILE_NAME=temp.txt
 #ONLY_IMAGE_PATH=False
 
 """
@@ -62,7 +62,7 @@ Keyword principal
 '''
 
 ##########################################################################################
-MODULES_IMPORT_RESOURCE = '''*** Settings ***
+MODULES_IMPORT_RESOURCE = """*** Settings ***
 Documentation    Documentacao das Keywords da Suite de Tasks
 Library     rpapy.activities
   
@@ -75,7 +75,7 @@ ${VAR}=      variables
 Primeira Keyword
     [Arguments]         ${arg}
     Log To Console      Hello ${arg}!
-'''
+"""
 
 ##########################################################################################
 MSG_OPCOES_IMG = """

@@ -56,6 +56,9 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = "."
 addopts = "--doctest-modules"
 
+[tool.taskipy.tasks]
+draw = 'robot -d log tasks/main.robot'
+
 [tool.poetry_bumpversion.file."rpapy/__main__.py"]
 search = '- rpapy v{current_version}'
 replace = '- rpapy v{new_version}'

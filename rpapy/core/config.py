@@ -14,7 +14,7 @@ class Config:
     RESOURCES_DIR_NAME = os.environ.get('RESOURCES_DIR_NAME') or 'resources'
     RESOURCES_KEYWORDS_FILE_NAME = os.environ.get('RESOURCES_KEYWORDS_FILE_NAME') or 'keywords.robot'
     IMAGES_DIR_NAME = os.environ.get('IMAGES_DIR_NAME') or 'images'
-    IMAGES_ERROR_DIR_NAME = os.environ.get('IMAGES_ERROR_DIR_NAME') or 'images_error'
+    IMAGES_ERROR_DIR_NAME = os.environ.get('IMAGES_ERROR_DIR_NAME') or 'error_images'
     TASKS_DIR_NAME = os.environ.get('TASKS_DIR_NAME') or 'tasks'
     MAX_WAIT_MAINTENANCE = int(os.environ.get('MAX_WAIT_MAINTENANCE') or 5)
     CHECK_MODE = os.environ.get('CHECK_MODE') or False

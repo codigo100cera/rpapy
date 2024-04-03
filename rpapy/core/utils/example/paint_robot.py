@@ -64,22 +64,22 @@ Editar Cor RGB
     Sleep    .5
 
     Write Text Vision    campo_red    backend=uia    after=.2
-    ...    text=${LIMPAR}${r}      move_x=-40
+    ...    text=${LIMPAR}${r}
 
     Write Text Vision    campo_green    backend=uia    after=.2
-    ...    text=${LIMPAR}${g}      move_x=-35
+    ...    text=${LIMPAR}${g}
 
     Write Text Vision    campo_blue    backend=uia    after=.2
-    ...    text=${LIMPAR}${b}      move_x=-35
+    ...    text=${LIMPAR}${b}
 
     # Write Text Vision    campo_matiz      backend=uia
-    # ...    text=${LIMPAR}${matiz}    move_x=-30
+    # ...    text=${LIMPAR}${matiz}
 
     # Write Text Vision    campo_sat      backend=uia
-    # ...    text=${LIMPAR}${sat}    move_x=-30
+    # ...    text=${LIMPAR}${sat}
 
     # Write Text Vision    campo_lum    backend=uia
-    # ...    text=${LIMPAR}${lum}    move_x=-30
+    # ...    text=${LIMPAR}${lum}
 
     Click Vision    btn_ok_cor_definida    backend=uia
 
@@ -148,7 +148,6 @@ Pintar area
 
 
 CUSTOM_KEYWORDS = """
-
 import os
 from pathlib import Path
 
@@ -188,7 +187,7 @@ def desenhar(nome_imagem: str):
             
             start_x, start_y = mouse.get_position()
 
-            pyautogui.sleep(0.01)
+            pyautogui.sleep(0.03)
             mouse.drag(start_x, start_y, x, y, absolute=True, duration=float(0.00003))
             pyautogui.sleep(0.01)
 
