@@ -16,7 +16,7 @@ def confirm_ok_cancel(text:str, title:str = 'Janela de Confirmação')-> bool:
     layout = [[text], buttons]
 
     window = sg.Window(
-        "Select Anchor",
+        title,
         layout,
         # icon="icon.ico",
         no_titlebar=True,
@@ -31,7 +31,7 @@ def confirm_ok_cancel(text:str, title:str = 'Janela de Confirmação')-> bool:
     del(window)
 
     if choice is None or choice.upper() == 'CANCEL':
-        sg.popup_annoying(f'O processo foi cancelado', 
+        sg.popup(f'O processo foi cancelado', 
                           keep_on_top=True)
         return False
     return True
@@ -49,7 +49,7 @@ def confirm_yes_no_cancel(text:str, title:str = 'Janela de Confirmação')-> boo
     layout = [[text], buttons]
 
     window = sg.Window(
-        "Select Anchor",
+        title,
         layout,
         # icon="icon.ico",
         no_titlebar=True,
@@ -84,7 +84,7 @@ def confirm_yes_no(text:str, title:str = 'Janela de Confirmação')-> bool:
     layout = [[text], buttons]
 
     window = sg.Window(
-        "Select Anchor",
+        title,
         layout,
         # icon="icon.ico",
         no_titlebar=True,

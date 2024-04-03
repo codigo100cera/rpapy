@@ -1,7 +1,7 @@
 """RPAPY is a open source easy tool for automating boring stuffs on any screen with robotframework, pyautogui, pywinauto and others.
 --------
 
-- rpapy v1.1.1
+- rpapy v1.1.2
 """
 import sys
 from pathlib import Path
@@ -123,7 +123,7 @@ class AgentPy(QObject):
         self.hotkeys_thread.set_backend_win32.connect(self.set_backend_win32)
         self.hotkeys_thread.inspect_element.connect(self._backend_inspect)
         self.hotkeys_thread.show_config.connect(self._show_config)
-        self.hotkeys_thread.load_example.connect(self._upload_example)
+        self.hotkeys_thread.load_example.connect(self._load_example)
         self.hotkeys_thread.update_image.connect(self._update_image)
         self.hotkeys_thread.off.connect(self._turn_off)
         self.hotkeys_thread.start()
@@ -159,7 +159,7 @@ class AgentPy(QObject):
     def _show_config(self):
         message_to_set_timeout(self.config.get_config(), timeout=False)
 
-    def _upload_example(self):
+    def _load_example(self):
         load_robot_example()
 
     def set_backend_uia(self, backend: str):
